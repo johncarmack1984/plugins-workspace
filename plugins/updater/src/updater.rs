@@ -95,19 +95,26 @@ impl RemoteRelease {
 pub type OnBeforeExit = Arc<dyn Fn() + Send + Sync + 'static>;
 pub type VersionComparator = Arc<dyn Fn(Version, RemoteRelease) -> bool + Send + Sync>;
 
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct UpdaterBuilder {
     app_name: String,
+    #[cfg_attr(feature = "specta", specta(type = String))]
     current_version: Version,
     config: Config,
+    #[cfg_attr(feature = "specta", specta(type = Option<()>))]
     pub(crate) version_comparator: Option<VersionComparator>,
     executable_path: Option<PathBuf>,
     target: Option<String>,
+    #[cfg_attr(feature = "specta", specta(type = Vec<String>))]
     endpoints: Option<Vec<Url>>,
+    #[cfg_attr(feature = "specta", specta(type = HashMap<String, String>))]
     headers: HeaderMap,
     timeout: Option<Duration>,
+    #[cfg_attr(feature = "specta", specta(type = Vec<String>))]
     proxy: Option<Url>,
     installer_args: Vec<OsString>,
     current_exe_args: Vec<OsString>,
+    #[cfg_attr(feature = "specta", specta(type = Option<()>))]
     on_before_exit: Option<OnBeforeExit>,
 }
 
@@ -436,9 +443,11 @@ impl Updater {
 }
 
 #[derive(Clone)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct Update {
     config: Config,
     #[allow(unused)]
+    #[cfg_attr(feature = "specta", specta(type = Option<()>))]
     on_before_exit: Option<OnBeforeExit>,
     /// Update description
     pub body: Option<String>,
@@ -451,14 +460,17 @@ pub struct Update {
     /// Target
     pub target: String,
     /// Download URL announced
+    #[cfg_attr(feature = "specta", specta(type = String))]
     pub download_url: Url,
     /// Signature announced
     pub signature: String,
     /// Request timeout
     pub timeout: Option<Duration>,
     /// Request proxy
+    #[cfg_attr(feature = "specta", specta(type = Option<String>))]
     pub proxy: Option<Url>,
     /// Request headers
+    #[cfg_attr(feature = "specta", specta(type = HashMap<String, String>))]
     pub headers: HeaderMap,
     /// Extract path
     #[allow(unused)]

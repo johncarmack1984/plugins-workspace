@@ -9,6 +9,7 @@ use url::Url;
 
 /// Install modes for the Windows update.
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(rename_all = "camelCase")]
 pub enum WindowsUpdateInstallMode {
     /// Specifies there's a basic UI during the installation process, including a final dialog box at the end.
@@ -64,6 +65,7 @@ impl Default for WindowsUpdateInstallMode {
 }
 
 #[derive(Debug, Clone, Deserialize, Default)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 #[serde(rename_all = "camelCase")]
 pub struct WindowsConfig {
     /// Additional arguments given to the NSIS or WiX installer.
@@ -92,10 +94,12 @@ where
 
 /// Updater configuration.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "specta", derive(specta::Type))]
 pub struct Config {
     /// Dangerously allow using insecure transport protocols for update endpoints.
     pub dangerous_insecure_transport_protocol: bool,
     /// Updater endpoints.
+    #[cfg_attr(feature = "specta", specta(type = Vec<String>))]
     pub endpoints: Vec<Url>,
     /// Signature public key.
     pub pubkey: String,
