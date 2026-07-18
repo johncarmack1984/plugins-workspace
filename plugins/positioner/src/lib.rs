@@ -100,5 +100,17 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         Ok(())
     });
 
+    // A display change invalidates the cached tray rect: its coordinates are
+    // relative to a monitor configuration that no longer exists. Clear it so
+    // tray-relative positioning fails loudly ("Tray position not set") until
+    // the next tray event repopulates it, instead of silently placing windows
+    // at stale coordinates.
+    #[cfg(all(feature = "tray-icon", target_os = "macos"))]
+    let plugin = plugin.on_event(|app_handle, event| {
+        if let tauri::RunEvent::MonitorsChanged = event {
+            app_handle.state::<Tray>().0.lock().unwrap().take();
+        }
+    });
+
     plugin.build()
 }
